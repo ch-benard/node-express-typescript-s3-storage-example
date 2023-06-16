@@ -9,4 +9,4 @@ or
 ```bash
 yarn start:dev
 ```
-and test the url: http://localhost:{PORT}
+You can use a tool like [postman](https://www.postman.com/https://www.postman.com/) or Talend API Tester to test the url: http://localhost:{PORT}
