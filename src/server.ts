@@ -1,10 +1,12 @@
 import express, { Express, Request, Response } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import s3Uploadv3 from './s3service';
-import config from './config';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app: Express = express();
-const port = config.port ?? 4050;
+const port = process.env.PORT ?? 3000;
 
 // Store on S3 Bucket
 const storage = multer.memoryStorage();
@@ -32,19 +34,11 @@ app.get('/', (res: Response) => {
 });
 
 app.post('/upload', upload.array("files"), async (req: Request, res) => {
-    console.log('================================================================================');
-    console.log(req.files);
-    console.log('================================================================================');
-
     const files: Express.Multer.File[] = req.files as Express.Multer.File[];
     try {
         const uploadedFileList = await s3Uploadv3(files);
-        console.log('uploadedFileList:');
-        console.log(uploadedFileList);
-        console.log('================================================================================');
         res.send(`Fichiers uploadés avec succès : ${uploadedFileList}`);
     } catch (error) {
-        console.log(error);
         res.status(500).send('Une erreur s\'est produite lors de l\'envoi des fichiers vers S3.');
     }
 });
@@ -75,7 +69,6 @@ app.use((error: Error, req: Request, res: Response, next: any) => {
 app.listen(port, () => {
     // only log this information in development.
     if (process.env?.NODE_ENV !== "production") {
-        console.log(process.env?.NODE_ENV || 'Not in PRODUCTION');
         console.log(`[Server]: I am running at https://localhost:${port}`);
     }
 });

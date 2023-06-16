@@ -15,11 +15,6 @@ export default async function s3Uploadv3(files: Express.Multer.File[],) {
         }
     });
 
-    console.log('params:');
-    console.log(params);
-    console.log('================================================================================');
-
-
     // const fileBuffer = await sharp(file.buffer)
     //     .resize({ height: 1920, width: 1080, fit: "contain" })
     //     .toBuffer();
