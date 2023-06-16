@@ -38,24 +38,16 @@ app.post('/upload', upload.array("files"), async (req: Request, res) => {
 
     const files: Express.Multer.File[] = req.files as Express.Multer.File[];
     try {
-        const results = await s3Uploadv3(files);
-        console.log('results:');
-        console.log(results);
+        const uploadedFileList = await s3Uploadv3(files);
+        console.log('uploadedFileList:');
+        console.log(uploadedFileList);
         console.log('================================================================================');
+        res.send(`Fichiers uploadés avec succès : ${uploadedFileList}`);
     } catch (error) {
         console.log(error);
+        res.status(500).send('Une erreur s\'est produite lors de l\'envoi des fichiers vers S3.');
     }
 });
-
-// multiple fields files upload
-// const multiUpload = upload.fields([
-//     { name: "avatar", maxCount: 1 },
-//     { name: "resume", maxCount: 1 },
-// ]);
-// app.post('/upload', multiUpload, (req, res) => {
-//     console.log(req.files);
-//     res.json({ status: "success" });
-// });
 
 app.use((error: Error, req: Request, res: Response, next: any) => {
     if (error instanceof multer.MulterError) {
